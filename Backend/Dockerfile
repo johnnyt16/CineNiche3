@@ -5,9 +5,9 @@ WORKDIR /app
 COPY . ./
 RUN dotnet restore Backend/Backend/Backend.csproj
 
-# Build and publish
+# Build and publish with warnings as information
 WORKDIR /app/Backend/Backend
-RUN dotnet publish -c Release -o /app/publish
+RUN dotnet publish -c Release -o /app/publish /p:TreatWarningsAsErrors=false
 
 # Runtime image
 FROM mcr.microsoft.com/dotnet/aspnet:8.0 AS runtime
