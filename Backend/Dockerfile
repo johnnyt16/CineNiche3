@@ -18,7 +18,7 @@ FROM base AS final
 WORKDIR /app
 COPY --from=publish /app/publish .
 # Make sure the database file is included and has proper permissions
-COPY Backend/movies.db .
+COPY Movies.db .
 RUN chmod 644 movies.db
 
 # Use environment variable for the port (Cloud Run provides PORT env var)
