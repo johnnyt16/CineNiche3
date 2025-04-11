@@ -173,8 +173,11 @@ app.Use(async (context, next) =>
 // Use CORS before any other middleware
 app.UseCors("AllowFrontend");
 
-// Re-enable HTTPS redirection
-app.UseHttpsRedirection();
+// Only use HTTPS redirection in development
+if (app.Environment.IsDevelopment())
+{
+    app.UseHttpsRedirection();
+}
 
 // Add authentication middleware before authorization
 app.UseAuthentication();
