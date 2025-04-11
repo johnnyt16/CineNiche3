@@ -1,27 +1,18 @@
-FROM mcr.microsoft.com/dotnet/aspnet:8.0 AS base
-WORKDIR /app
-EXPOSE 80
-EXPOSE 443
-
 FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
-WORKDIR /src
-COPY Backend/Backend/Backend.csproj Backend/
-RUN dotnet restore Backend/Backend.csproj
-COPY . .
-WORKDIR /src/Backend
-
-# Create and set permissions on build directory
-RUN mkdir -p /app/build && chmod -R 777 /app/build
-RUN dotnet build "Backend.csproj" -c Release -o /app/build
-
-FROM build AS publish
-# Create and set permissions on publish directory
-RUN mkdir -p /app/publish && chmod -R 777 /app/publish
-RUN dotnet publish "Backend.csproj" -c Release -o /app/publish
-
-FROM base AS final
 WORKDIR /app
-COPY --from=publish /app/publish .
+
+# Copy everything and restore
+COPY . ./
+RUN dotnet restore Backend/Backend/Backend.csproj
+
+# Build and publish
+WORKDIR /app/Backend/Backend
+RUN dotnet publish -c Release -o /app/publish
+
+# Runtime image
+FROM mcr.microsoft.com/dotnet/aspnet:8.0 AS runtime
+WORKDIR /app
+COPY --from=build /app/publish ./
 
 # Create data directory and empty database files
 RUN mkdir -p /app/Data && \
@@ -30,6 +21,8 @@ RUN mkdir -p /app/Data && \
     chmod 644 /app/Movies.db && \
     chmod 644 /app/Data/Movies.db
 
-# Use environment variable for the port (Cloud Run provides PORT env var)
+# Environment configuration
 ENV ASPNETCORE_URLS=http://+:${PORT:-80}
+
+# Start the app
 ENTRYPOINT ["dotnet", "Backend.dll"] 
