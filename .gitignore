@@ -1,0 +1,79 @@
+# OS-specific files
+.DS_Store
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+$RECYCLE.BIN/
+
+# Editor directories and files
+.idea/
+.vscode/
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
+
+# Frontend specific
+# dependencies
+frontend/node_modules
+frontend/.pnp
+frontend/.pnp.js
+
+# testing
+frontend/coverage
+
+# production
+frontend/build
+frontend/dist
+
+# Logs
+frontend/npm-debug.log*
+frontend/yarn-debug.log*
+frontend/yarn-error.log*
+frontend/pnpm-debug.log*
+
+# Backend specific
+# Build results
+Backend/**/[Dd]ebug/
+Backend/**/[Dd]ebugPublic/
+Backend/**/[Rr]elease/
+Backend/**/[Rr]eleases/
+Backend/**/x64/
+Backend/**/x86/
+Backend/**/build/
+Backend/**/bld/
+Backend/**/[Bb]in/
+Backend/**/[Oo]bj/
+Backend/**/[Oo]ut/
+Backend/**/msbuild.log
+Backend/**/msbuild.err
+Backend/**/msbuild.wrn
+
+# Visual Studio files
+.vs/
+*.user
+*.userosscache
+*.sln.docstates
+
+# .NET Core
+project.lock.json
+project.fragment.lock.json
+artifacts/
+
+# Local Configuration
+**/appsettings.Development.json
+**/appsettings.local.json
+**/appsettings.*.local.json
+
+# Environment files
+.env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+
+# Firebase
+.firebase/
+firebase-debug.log
+.runtimeconfig.json 

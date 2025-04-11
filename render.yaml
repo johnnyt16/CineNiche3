@@ -1,0 +1,14 @@
+services:
+  - type: web
+    name: cineniche-backend
+    env: docker
+    repo: https://github.com/your-username/CineNiche2.git # Replace with your actual repository URL
+    region: oregon # Choose your preferred region
+    branch: main # Your deployment branch
+    dockerfilePath: Backend/Dockerfile
+    healthCheckPath: /health
+    envVars:
+      - key: PORT
+        value: 10000
+      - key: ASPNETCORE_ENVIRONMENT
+        value: Production 

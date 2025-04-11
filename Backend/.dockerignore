@@ -1,0 +1,19 @@
+# .NET build artifacts
+**/bin/
+**/obj/
+**/.vs/
+
+# Development files
+**/.vscode/
+**/.idea/
+**/.git/
+
+# User-specific files
+**/*.user
+**/*.suo
+
+# Logs & Local databases (except for our main SQLite db)
+**/*.log
+**/*.sqlite
+# Don't ignore our main movies.db file but ignore any others 
+!**/movies.db 

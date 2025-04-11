@@ -1,0 +1,2 @@
+[config]
+post_deployment_actions_dir = .deployment_scripts 
