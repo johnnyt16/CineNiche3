@@ -10,10 +10,13 @@ using Microsoft.IdentityModel.Tokens;
 using System.Text;
 using Backend.Models;
 using CineNiche.API.DTOs;
-using Microsoft.AspNetCore.HttpsPolicy;
+// using Microsoft.AspNetCore.HttpsPolicy; // Remove HTTPS policy reference
 using CineNiche.API.Services;
 
 var builder = WebApplication.CreateBuilder(args);
+
+// Force disable HTTPS entirely
+builder.WebHost.UseUrls("http://0.0.0.0:" + (Environment.GetEnvironmentVariable("PORT") ?? "80"));
 
 // Add configuration
 builder.Configuration.AddJsonFile("appsettings.json");
@@ -23,8 +26,10 @@ builder.Configuration.AddEnvironmentVariables();
 // Explicitly configure Kestrel to use HTTP only
 builder.WebHost.ConfigureKestrel(serverOptions =>
 {
+    // Force HTTP only
     serverOptions.ListenAnyIP(int.Parse(Environment.GetEnvironmentVariable("PORT") ?? "80"));
-    // No HTTPS configuration
+    // Disable HTTPS entirely
+    serverOptions.Configure();
 });
 
 builder.Services.AddScoped<RecommendationService>(); 
@@ -69,16 +74,7 @@ builder.Services.AddControllers()
         options.JsonSerializerOptions.PropertyNameCaseInsensitive = true;
     });
 
-// HTTPS configuration - only in development
-if (builder.Environment.IsDevelopment())
-{
-    builder.Services.AddHsts(options =>
-    {
-        options.Preload = true;
-        options.IncludeSubDomains = true;
-        options.MaxAge = TimeSpan.FromDays(60);
-    });
-}
+// HTTPS configuration completely removed
 
 // Add CORS
 builder.Services.AddCors(options =>
@@ -148,11 +144,7 @@ if (app.Environment.IsDevelopment())
     app.UseSwagger();
     app.UseSwaggerUI();
 }
-else
-{
-    // In production, use HSTS
-    app.UseHsts();
-}
+// HSTS completely removed
 
 // Add Content-Security-Policy middleware
 app.Use(async (context, next) =>
@@ -183,11 +175,7 @@ app.Use(async (context, next) =>
 // Use CORS before any other middleware
 app.UseCors("AllowFrontend");
 
-// Only use HTTPS redirection in development
-if (app.Environment.IsDevelopment())
-{
-    app.UseHttpsRedirection();
-}
+// HTTPS redirection completely removed
 
 // Add authentication middleware before authorization
 app.UseAuthentication();
