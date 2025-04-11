@@ -20,6 +20,13 @@ builder.Configuration.AddJsonFile("appsettings.json");
 builder.Configuration.AddJsonFile($"appsettings.{builder.Environment.EnvironmentName}.json", optional: true);
 builder.Configuration.AddEnvironmentVariables();
 
+// Explicitly configure Kestrel to use HTTP only
+builder.WebHost.ConfigureKestrel(serverOptions =>
+{
+    serverOptions.ListenAnyIP(int.Parse(Environment.GetEnvironmentVariable("PORT") ?? "80"));
+    // No HTTPS configuration
+});
+
 builder.Services.AddScoped<RecommendationService>(); 
 
 // Configure Database with better path handling
@@ -62,13 +69,16 @@ builder.Services.AddControllers()
         options.JsonSerializerOptions.PropertyNameCaseInsensitive = true;
     });
 
-// HTTPS configuration
-builder.Services.AddHsts(options =>
+// HTTPS configuration - only in development
+if (builder.Environment.IsDevelopment())
 {
-    options.Preload = true;
-    options.IncludeSubDomains = true;
-    options.MaxAge = TimeSpan.FromDays(60);
-});
+    builder.Services.AddHsts(options =>
+    {
+        options.Preload = true;
+        options.IncludeSubDomains = true;
+        options.MaxAge = TimeSpan.FromDays(60);
+    });
+}
 
 // Add CORS
 builder.Services.AddCors(options =>
