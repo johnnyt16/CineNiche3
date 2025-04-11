@@ -191,8 +191,8 @@ app.Use(async (context, next) =>
 {
     try
     {
-        // Define CSP policies
-        context.Response.Headers.Add("Content-Security-Policy", 
+        // Define CSP policies - use indexer pattern instead of Add
+        context.Response.Headers["Content-Security-Policy"] = 
             "default-src 'self';" +
             "img-src 'self' https://postersintex.blob.core.windows.net data:;" +
             "style-src 'self' https://fonts.googleapis.com 'unsafe-inline';" +
@@ -202,14 +202,14 @@ app.Use(async (context, next) =>
             "frame-ancestors 'none';" +
             "form-action 'self';" +
             "base-uri 'self';" +
-            "object-src 'none'");
+            "object-src 'none'";
 
-        // Add other security headers
-        context.Response.Headers.Add("X-Content-Type-Options", "nosniff");
-        context.Response.Headers.Add("X-Frame-Options", "DENY");
-        context.Response.Headers.Add("X-XSS-Protection", "1; mode=block");
-        context.Response.Headers.Add("Referrer-Policy", "strict-origin-when-cross-origin");
-        context.Response.Headers.Add("Permissions-Policy", "camera=(), microphone=(), geolocation=()");
+        // Add other security headers - use indexer pattern
+        context.Response.Headers["X-Content-Type-Options"] = "nosniff";
+        context.Response.Headers["X-Frame-Options"] = "DENY";
+        context.Response.Headers["X-XSS-Protection"] = "1; mode=block";
+        context.Response.Headers["Referrer-Policy"] = "strict-origin-when-cross-origin";
+        context.Response.Headers["Permissions-Policy"] = "camera=(), microphone=(), geolocation=()";
         
         await next();
     }
