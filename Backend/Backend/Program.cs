@@ -81,21 +81,16 @@ builder.Services.AddCors(options =>
 {
     options.AddPolicy("AllowFrontend", policy =>
     {
-        policy.WithOrigins(
-                "http://localhost:3000",  // React's default port with Create React App
-                "http://localhost:5173",  // Vite's default port
-                "http://127.0.0.1:3000",
-                "http://127.0.0.1:5173",
-                "https://localhost:3000",  // HTTPS versions
-                "https://localhost:5173", 
-                "https://127.0.0.1:3000",
-                "https://127.0.0.1:5173",
-                "https://localhost:5212",
-                "https://cineniche-fkazataxamgph8bu.eastus-01.azurewebsites.net", // Azure domain
-                "https://cineniche-91c50.web.app",        // Firebase domain
-                "https://cineniche-91c50.firebaseapp.com", // Firebase alternate domain
-                "https://cineniche-backend.onrender.com", // Render backend domain
-                "https://your-frontend-url.onrender.com"  // Render frontend domain
+        policy
+            .WithOrigins(
+                "http://localhost:3000",
+                "http://localhost:5173",
+                "https://localhost:3000",
+                "https://localhost:5173",
+                "https://cineniche-fkazataxamgph8bu.eastus-01.azurewebsites.net",
+                "https://cineniche-91c50.web.app",
+                "https://cineniche-91c50.firebaseapp.com",
+                "https://cineniche3.onrender.com"
             )
             .AllowAnyHeader()
             .AllowAnyMethod()
@@ -156,11 +151,25 @@ app.Use(async (context, next) =>
         "style-src 'self' https://fonts.googleapis.com 'unsafe-inline';" +
         "font-src 'self' https://fonts.gstatic.com;" +
         "script-src 'self' 'unsafe-inline';" + 
-        "connect-src 'self' https://localhost:* http://localhost:*;" +
+        "connect-src 'self' https://localhost:* http://localhost:* https://cineniche-91c50.web.app https://cineniche-91c50.firebaseapp.com;" +
         "frame-ancestors 'none';" +
         "form-action 'self';" +
         "base-uri 'self';" +
         "object-src 'none'");
+
+    // Add CORS headers directly to ensure they're always present
+    context.Response.Headers.Add("Access-Control-Allow-Origin", context.Request.Headers["Origin"].ToString());
+    context.Response.Headers.Add("Access-Control-Allow-Credentials", "true");
+    context.Response.Headers.Add("Access-Control-Allow-Headers", "Content-Type, Authorization, X-Requested-With");
+    context.Response.Headers.Add("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS");
+
+    // Handle preflight requests
+    if (context.Request.Method == "OPTIONS")
+    {
+        context.Response.StatusCode = 200;
+        await context.Response.CompleteAsync();
+        return;
+    }
 
     // Add other security headers
     context.Response.Headers.Add("X-Content-Type-Options", "nosniff");
