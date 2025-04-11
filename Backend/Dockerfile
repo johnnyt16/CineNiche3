@@ -7,7 +7,7 @@ RUN dotnet restore Backend/Backend/Backend.csproj
 
 # Build and publish with warnings completely disabled
 WORKDIR /app/Backend/Backend
-RUN dotnet build -c Release -o /app/build /p:TreatWarningsAsErrors=false /nowarn:CS8601,CS8602,CS8603,CS8618
+RUN dotnet build -c Release -o /app/build /p:TreatWarningsAsErrors=false /nowarn:CS8600,CS8601,CS8602,CS8603,CS8604,CS8618
 RUN dotnet publish -c Release -o /app/publish --no-build /p:TreatWarningsAsErrors=false
 
 # Runtime image

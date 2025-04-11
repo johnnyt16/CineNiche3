@@ -166,7 +166,8 @@ app.UseExceptionHandler(appError =>
                 }
                 : new { 
                     StatusCode = context.Response.StatusCode,
-                    Message = "Internal Server Error"
+                    Message = "Internal Server Error",
+                    Details = string.Empty
                 };
                 
             await context.Response.WriteAsync(JsonSerializer.Serialize(response));
