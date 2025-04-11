@@ -17,9 +17,19 @@ RUN dotnet publish "Backend.csproj" -c Release -o /app/publish
 FROM base AS final
 WORKDIR /app
 COPY --from=publish /app/publish .
-# Make sure the database file is included and has proper permissions
-COPY Movies.db .
-RUN chmod 644 movies.db
+
+# Create data directory to ensure it exists
+RUN mkdir -p /app/Data
+
+# Copy database files - try multiple possible locations to ensure one works
+COPY Backend/Movies.db /app/ || true
+COPY Movies.db /app/ || true
+COPY Backend/Backend/Movies.db /app/ || true
+COPY Backend/Backend/Data/Movies.db /app/Data/ || true
+
+# Set permissions
+RUN chmod 644 /app/Movies.db || true
+RUN chmod 644 /app/Data/Movies.db || true
 
 # Use environment variable for the port (Cloud Run provides PORT env var)
 ENV ASPNETCORE_URLS=http://+:${PORT:-80}
