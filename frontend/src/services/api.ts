@@ -3,10 +3,8 @@ import axios from 'axios';
 // Determine the base URL based on environment
 const getApiBaseUrl = () => {
   if (process.env.NODE_ENV === 'production') {
-    // Replace with Cloud Run URL once deployed
-    return 'https://cineniche-backend-REPLACE_WITH_CLOUD_RUN_URL.a.run.app/api';
-    // Uncomment the line below and remove the line above once you have the actual Cloud Run URL
-    // return 'https://YOUR_CLOUD_RUN_DOMAIN/api';
+    // Use Render backend URL
+    return 'https://cineniche3.onrender.com/api';
   }
   return 'https://localhost:5213/api'; // Local development URL
 };
