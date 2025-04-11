@@ -18,18 +18,12 @@ FROM base AS final
 WORKDIR /app
 COPY --from=publish /app/publish .
 
-# Create data directory to ensure it exists
-RUN mkdir -p /app/Data
-
-# Copy database files - try multiple possible locations to ensure one works
-COPY Backend/Movies.db /app/ || true
-COPY Movies.db /app/ || true
-COPY Backend/Backend/Movies.db /app/ || true
-COPY Backend/Backend/Data/Movies.db /app/Data/ || true
-
-# Set permissions
-RUN chmod 644 /app/Movies.db || true
-RUN chmod 644 /app/Data/Movies.db || true
+# Create data directory and empty database files
+RUN mkdir -p /app/Data && \
+    touch /app/Movies.db && \
+    touch /app/Data/Movies.db && \
+    chmod 644 /app/Movies.db && \
+    chmod 644 /app/Data/Movies.db
 
 # Use environment variable for the port (Cloud Run provides PORT env var)
 ENV ASPNETCORE_URLS=http://+:${PORT:-80}
