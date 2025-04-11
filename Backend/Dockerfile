@@ -9,9 +9,14 @@ COPY Backend/Backend/Backend.csproj Backend/
 RUN dotnet restore Backend/Backend.csproj
 COPY . .
 WORKDIR /src/Backend
+
+# Create and set permissions on build directory
+RUN mkdir -p /app/build && chmod -R 777 /app/build
 RUN dotnet build "Backend.csproj" -c Release -o /app/build
 
 FROM build AS publish
+# Create and set permissions on publish directory
+RUN mkdir -p /app/publish && chmod -R 777 /app/publish
 RUN dotnet publish "Backend.csproj" -c Release -o /app/publish
 
 FROM base AS final
